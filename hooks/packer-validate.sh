@@ -10,10 +10,10 @@ export PATH=$PATH:/usr/local/bin
 # Store and return last failure from validate so this can validate every directory passed before exiting
 VALIDATE_ERROR=0
 
-for dir in $(echo "$@" | xargs -n1 dirname | sort -u | uniq); do
-  echo "--> Running 'packer validate -syntax-only' in directory '$dir'"
-  pushd "$dir" >/dev/null
-  packer validate -syntax-only || VALIDATE_ERROR=$?
+for file in "$@"; do
+  echo "--> Running 'packer validate -syntax-only' on file '$file'"
+  pushd "$(dirname "$file")" >/dev/null
+  packer validate -syntax-only "$(basename "$file")"
   popd >/dev/null
 done
 
